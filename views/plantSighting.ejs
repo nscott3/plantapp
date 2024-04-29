@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Recognition</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<h1>Plant Sightings</h1>
+<ul>
+    <% plants.forEach(plant => { %>
+        <li>
+            <h2><%= plant.description %></h2>
+            <p>Date: <%= plant.date %> Time: <%= plant.time %></p>
+            <p>Location: <%= plant.location %></p>
+            <p>Size: <%= plant.size %></p>
+            <p>Characteristics: Flowers - <%= plant.characteristics.flowers %>, Leaves - <%= plant.characteristics.leaves %>, Fruits - <%= plant.characteristics.fruits %>, Sun Exposure - <%= plant.characteristics.sunExposure %>, Flower Color - <%= plant.characteristics.flowerColor %></p>
+            <p>Identification: Name - <%= plant.identification.name %>, Status - <%= plant.identification.status %></p>
+            <p>Added by: <%= plant.nickname %></p>
+            <img src="<%= plant.photo %>" alt="Plant Photo">
+            <a href="/plant/<%= plant._id %>">View Details</a>
+        </li>
+    <% }) %>
+</ul>
+<a href="/add">Add New Plant</a>
+</body>
+</html>

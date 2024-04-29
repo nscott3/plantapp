@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Details</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<h1><%= plant.description %></h1>
+<p>Date: <%= plant.date %> Time: <%= plant.time %></p>
+<p>Location: <%= plant.location %></p>
+<p>Size: <%= plant.size %></p>
+<p>Characteristics: Flowers - <%= plant.characteristics.flowers %>, Leaves - <%= plant.characteristics.leaves %>, Fruits - <%= plant.characteristics.fruits %>, Sun Exposure - <%= plant.characteristics.sunExposure %>, Flower Color - <%= plant.characteristics.flowerColor %></p>
+<p>Identification: Name - <%= plant.identification.name %>, Status - <%= plant.identification.status %></p>
+<p>DBPedia Info: Common Name - <%= plant.identification.dbpediaInfo.commonName %>, Scientific Name - <%= plant.identification.dbpediaInfo.scientificName %>, Description - <%= plant.identification.dbpediaInfo.description %>, URI - <a href="<%= plant.identification.dbpediaInfo.uri %>"><%= plant.identification.dbpediaInfo.uri %></a></p>
+<p>Added by: <%= plant.nickname %></p>
+<img src="<%= plant.photo %>" alt="Plant Photo">
+<h2>Comments</h2>
+<ul>
+    <% plant.comments.forEach(comment => { %>
+        <li>
+            <p><%= comment.nickname %>: <%= comment.comment %> - <%= comment.timestamp %></p>
+        </li>
+    <% }) %>
+</ul>
+<form action="/plant/<%= plant._id %>/comment" method="post">
+    <label for="nickname">Nickname:</label>
+    <input type="text" id="nickname" name="nickname" required><br>
+    <label for="comment">Comment:</label>
+    <textarea id="comment" name="comment" required></textarea><br>
+    <button type="submit">Add Comment</button>
+</form>
+<a href="/">Back to Home</a>
+</body>
+</html>

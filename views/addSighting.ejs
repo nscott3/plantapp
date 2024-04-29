@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Plant Sighting</title>
+</head>
+<body>
+<h1>Add New Plant Sighting</h1>
+<form action="/sightings" method="POST" enctype="multipart/form-data">
+    <div>
+        <label for="sighting-date">Date and Time Seen:</label>
+        <input type="datetime-local" id="sighting-date" name="dateSeen" required>
+    </div>
+    <div>
+        <label for="sighting-location">Location (latitude, longitude):</label>
+        <input type="text" id="sighting-location" name="location" placeholder="53.3811, -1.4701" required>
+    </div>
+    <div>
+        <label for="sighting-description">Description:</label>
+        <textarea id="sighting-description" name="description" rows="4" required></textarea>
+    </div>
+    <div>
+        <label for="plant-size">Plant Size:</label>
+        <input type="text" id="plant-size" name="size" placeholder="Height, Spread" required>
+    </div>
+    <div>
+        <label>Plant Characteristics:</label>
+        <div>
+            <input type="checkbox" id="flowers" name="flowers">
+            <label for="flowers">Has Flowers</label>
+        </div>
+        <div>
+            <input type="checkbox" id="leaves" name="leaves">
+            <label for="leaves">Has Leaves</label>
+        </div>
+        <div>
+            <input type="checkbox" id="fruits" name="fruits">
+            <label for="fruits">Has Fruits or Seeds</label>
+        </div>
+        <div>
+            <label for="sun-exposure">Sun Exposure:</label>
+            <select id="sun-exposure" name="sunExposure">
+                <option value="full_sun">Full Sun</option>
+                <option value="partial_shade">Partial Shade</option>
+                <option value="full_shade">Full Shade</option>
+            </select>
+        </div>
+        <div>
+            <label for="flower-color">Flower Color:</label>
+            <input type="text" id="flower-color" name="flowerColor" placeholder="Color of the flowers">
+        </div>
+    </div>
+    <div>
+        <label for="plant-photo">Photo:</label>
+        <input type="file" id="plant-photo" name="photo" accept="image/*">
+    </div>
+    <div>
+        <label for="user-nickname">Your Nickname:</label>
+        <input type="text" id="user-nickname" name="nickname" required>
+    </div>
+    <button type="submit">Submit Sighting</button>
+</form>
+</body>
+</html>
