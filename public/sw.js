@@ -11,18 +11,20 @@ self.addEventListener('install', event => {
             const cache = await caches.open("static");
             cache.addAll([
                 '/',
+                '/add-todo',
                 '/insert',
                 '/manifest.json',
                 '/javascripts/insert.js',
                 '/javascripts/index.js',
                 '/javascripts/idb-utility.js',
+                '/javascripts/db.js',
                 '/stylesheets/style.css',
                 '/images/image_icon.png',
             ]);
             console.log('Service Worker: App Shell Cached');
         }
         catch{
-            console.log("error occured while caching...")
+            console.log("error occurred while caching...")
         }
 
     })());
@@ -44,17 +46,30 @@ self.addEventListener('activate', event => {
     )
 })
 
-// Fetch event to fetch from cache first
+// Fetch event to fetch from network first, then cache
 self.addEventListener('fetch', event => {
     event.respondWith((async () => {
-        const cache = await caches.open("static");
-        const cachedResponse = await cache.match(event.request);
-        if (cachedResponse) {
-            console.log('Service Worker: Fetching from Cache: ', event.request.url);
-            return cachedResponse;
+        const cache = await caches.open('dynamic');
+        try {
+            // Try fetching from the network
+            const networkResponse = await fetch(event.request);
+            if ((event.request.method === 'GET') && (event.request.url.startsWith('http') || event.request.url.startsWith('https'))) {
+                // We clone the response here because the response is a stream
+                // and can only be consumed once. Since we're consuming it twice
+                // (once for cache, once for return), we clone it.
+                cache.put(event.request, networkResponse.clone());
+            }
+            console.log('Calling network: ' + event.request.url);
+            return networkResponse;
+        } catch (error) {
+            // If network fetch fails, fetch from the cache
+            const cachedResponse = await cache.match(event.request);
+            if (cachedResponse) {
+                console.log('Service Worker: Fetching from Cache: ', event.request.url);
+                return cachedResponse;
+            }
+            throw error; // If neither network nor cache fetch succeeds, throw an error
         }
-        console.log('Service Worker: Fetching from URL: ', event.request.url);
-        return fetch(event.request);
     })());
 });
 
@@ -62,36 +77,5 @@ self.addEventListener('fetch', event => {
 self.addEventListener('sync', event => {
     if (event.tag === 'sync-todo') {
         console.log('Service Worker: Syncing new Todos');
-        openSyncTodosIDB().then((syncPostDB) => {
-            getAllSyncTodos(syncPostDB).then((syncTodos) => {
-                for (const syncTodo of syncTodos) {
-                    console.log('Service Worker: Syncing new Todo: ', syncTodo);
-                    console.log(syncTodo.text)
-                    // Create a FormData object
-                    const formData = new URLSearchParams();
-
-                    // Iterate over the properties of the JSON object and append them to FormData
-                    formData.append("text", syncTodo.text);
-
-                    // Fetch with FormData instead of JSON
-                    fetch('http://localhost:3000/add-todo', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                    }).then(() => {
-                        console.log('Service Worker: Syncing new Todo: ', syncTodo, ' done');
-                        deleteSyncTodoFromIDB(syncPostDB,syncTodo.id);
-                        // Send a notification
-                        self.registration.showNotification('Todo Synced', {
-                            body: 'Todo synced successfully!',
-                        });
-                    }).catch((err) => {
-                        console.error('Service Worker: Syncing new Todo: ', syncTodo, ' failed');
-                    });
-                }
-            });
-        });
     }
 });
