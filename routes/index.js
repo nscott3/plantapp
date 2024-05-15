@@ -3,8 +3,14 @@ var router = express.Router();
 var todoController = require('../controllers/todo')
 
 /* GET home page. */
+// index.js
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'View All Todos' });
+    let result = todoController.getAll()
+    result.then(todos => {
+        let data = JSON.parse(todos);
+        console.log(data.length)
+        res.render('index', { title: 'View All Todos', data: data});
+    })
 });
 
 router.get('/insert', function(req, res, next) {
@@ -24,10 +30,13 @@ router.get('/todos', function (req, res, next) {
 
 // route to add a new todo
 router.post('/add-todo', function(req, res, next) {
-    console.log("Received a todo: " + req.body.text);
-    todoController.create(req.body).then(todo => {
+    let data = req.body;
+    console.log("Received a todo: " + data.text);
+    // let filePath = req.file.path;
+    todoController.create(data).then(todo => {
         console.log(todo);
         res.status(200).send(todo);
+        // res.redirect('/');
     }).catch(err => {
         console.log(err);
         res.status(500).send(err);

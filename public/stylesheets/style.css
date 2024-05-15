@@ -4,5 +4,44 @@ body {
 }
 
 a {
-  color: #00B7FF;
+  color: #00b7ff;
+}
+
+form#add_form {
+  margin: 0 auto;
+  width: 50%;
+}
+
+form#add_form label {
+  display: block;
+  margin-top: 20px;
+}
+
+form#add_form input[type="text"],
+form#add_form input[type="datetime-local"],
+form#add_form input[type="number"],
+form#add_form select,
+form#add_form textarea {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+form#add_form input[type="checkbox"] {
+  margin-top: 10px;
+}
+
+form#add_form button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-top: 20px;
+  background-color: #00b7ff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+form#add_form button:hover {
+  background-color: #0091cc;
 }

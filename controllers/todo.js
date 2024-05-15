@@ -1,10 +1,9 @@
 // Import the todo model
-
 const todoModel = require('../models/todo');
 
 // Function to create new todos
 exports.create = function (userData) {
-    console.log(userData)
+    console.log('userData', userData);
     let todo = new todoModel({
         text: userData.text,
     });
