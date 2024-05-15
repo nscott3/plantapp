@@ -11,7 +11,7 @@ self.addEventListener('install', event => {
             const cache = await caches.open("static");
             cache.addAll([
                 '/',
-                '/add-todo',
+                '/add-plant',
                 '/insert',
                 '/manifest.json',
                 '/javascripts/insert.js',
@@ -73,9 +73,9 @@ self.addEventListener('fetch', event => {
     })());
 });
 
-//Sync event to sync the todos
+//Sync event to sync the plants
 self.addEventListener('sync', event => {
-    if (event.tag === 'sync-todo') {
+    if (event.tag === 'sync-plant') {
         console.log('Service Worker: Syncing new Todos');
     }
 });

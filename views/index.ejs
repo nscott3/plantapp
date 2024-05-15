@@ -7,11 +7,11 @@
     </head>
     <body>
         <h1><%= title %></h1>
-        <a href="/insert">Add a new todo</a>
+        <a href="/insert">Add a new plant</a>
         <br>
-        <ol id="todo_list">
-            <% data.forEach(todo => { %>
-            <li><%= todo.text %></li>
+        <ol id="plant_list">
+            <% data.forEach(plant => { %>
+            <li><%= plant.description %></li>
             <% }); %>
         </ol>
     </body>

@@ -24,7 +24,7 @@ window.onload = function () {
                 if (permission === "granted") {
                     navigator.serviceWorker.ready
                         .then(function (serviceWorkerRegistration) {
-                            serviceWorkerRegistration.showNotification("Todo App",
+                            serviceWorkerRegistration.showNotification("Plant App",
                                 {body: "Notifications are enabled!"})
                                 .then(r =>
                                     console.log(r)
@@ -35,23 +35,23 @@ window.onload = function () {
         }
     }
     if (navigator.onLine) {
-        fetch('http://localhost:3000/todos')
+        fetch('http://localhost:3000/plants')
             .then(function (res) {
                 return res.json();
             });
 
-        openSyncTodosIDB().then((db) => {
-            getAllSyncTodos(db).then(todos => {
-                console.log(todos)
-                if (todos.length === 0) {
+        openSyncPlantsIDB().then((db) => {
+            getAllSyncPlants(db).then(plants => {
+                console.log(plants)
+                if (plants.length === 0) {
                     return;
                 }
 
-                todos.forEach(todo => {
-                    console.log(todo)
-                    postData('http://localhost:3000/add-todo', todo).then(data => {
+                plants.forEach(plant => {
+                    console.log(plant)
+                    postData('http://localhost:3000/add-plant', plant).then(data => {
                         console.log(data);
-                        deleteSyncTodoFromIDB(db, todo.id)
+                        deleteSyncPlantFromIDB(db, plant.id)
                     }).catch(error => {
                         console.error('Error:', error);
                     });

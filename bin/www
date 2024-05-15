@@ -7,7 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('week07:server');
 var http = require('http');
-var database= require('../databases/todo')
+var database= require('../databases/plant')
 
 /**
  * Get port from environment and store in Express.
