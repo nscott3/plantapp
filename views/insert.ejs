@@ -9,68 +9,68 @@
     <h1><%= title %></h1>
     <a href="/">Go back to the homepage</a>
     <br>
-    <form id="add_form">
-      <label for="txt_in">
-        <span class="new_todo">New</span>
-        <span class="update_todo">Update</span> todo: </label>
-      <input id="txt_in" type="text" name="text" required>
-      <button id="add_btn" class="new_todo" type="submit">Add</button>
+<!--    <form id="add_form">-->
+<!--      <label for="description">-->
+<!--        <span class="new_plant">New</span>-->
+<!--        <span class="update_plant">Update</span> plant: </label>-->
+<!--      <input id="description" type="text" name="description" required>-->
+<!--      <button id="add_btn" class="new_plant" type="submit">Add</button>-->
+<!--    </form>-->
+    <form id="add_form"> <!-- action="/add-plant" method="POST" enctype="multipart/form-data" -->
+      <label for="dateTimeSeen">Date and Time Seen:</label>
+      <input id="dateTimeSeen" type="datetime-local" name="dateTimeSeen" required>
+
+      <label for="location">Location:</label>
+      <input id="location" type="text" name="location" required>
+
+      <label for="description">Description:</label>
+      <textarea id="description" name="description" required></textarea>
+
+      <label for="height">Plant Height:</label>
+      <input id="height" type="number" name="plantSize.height" required>
+
+      <label for="spread">Plant Spread:</label>
+      <input id="spread" type="number" name="plantSize.spread" required>
+
+      <label for="hasFlowers">Has Flowers:</label>
+      <input id="hasFlowers" type="checkbox" name="plantCharacteristics.hasFlowers">
+
+      <label for="hasLeaves">Has Leaves:</label>
+      <input id="hasLeaves" type="checkbox" name="plantCharacteristics.hasLeaves">
+
+      <label for="hasFruitsOrSeeds">Has Fruits or Seeds:</label>
+      <input id="hasFruitsOrSeeds" type="checkbox" name="plantCharacteristics.hasFruitsOrSeeds">
+
+      <label for="sunExposure">Sun Exposure:</label>
+      <select id="sunExposure" name="plantCharacteristics.sunExposure">
+        <option value="fullSun">Full Sun</option>
+        <option value="partialShade">Partial Shade</option>
+        <option value="fullShade">Full Shade</option>
+      </select>
+
+      <label for="flowerColor">Flower Color:</label>
+      <input id="flowerColor" type="text" name="plantCharacteristics.flowerColor">
+
+      <label for="name">Plant Name:</label>
+      <input id="name" type="text" name="identification.name">
+
+      <label for="status">Identification Status:</label>
+      <select id="status" name="identification.status">
+        <option value="completed">Completed</option>
+        <option value="inProgress">In Progress</option>
+      </select>
+
+      <label for="dbpediaURI">DBPedia URI:</label>
+      <input id="dbpediaURI" type="text" name="identification.dbpediaURI">
+
+      <label for="photo">Photo:</label>
+      <input type="file" id="photo" name="photo" accept="image/*">
+
+      <label for="userNickname">User Nickname:</label>
+      <input id="userNickname" type="text" name="userNickname">
+
+      <button id="add_btn" class="new_plant" type="submit">Add</button>
     </form>
-    <!--    <form id="add_form" action="/add-plant" method="POST" enctype="multipart/form-data">-->
-    <!--      <label for="dateTimeSeen">Date and Time Seen:</label>-->
-    <!--      <input id="dateTimeSeen" type="datetime-local" name="dateTimeSeen" required>-->
-
-    <!--      <label for="location">Location:</label>-->
-    <!--      <input id="location" type="text" name="location" required>-->
-
-    <!--      <label for="description">Description:</label>-->
-    <!--      <textarea id="description" name="description" required></textarea>-->
-
-    <!--      <label for="height">Plant Height:</label>-->
-    <!--      <input id="height" type="number" name="plantSize.height" required>-->
-
-    <!--      <label for="spread">Plant Spread:</label>-->
-    <!--      <input id="spread" type="number" name="plantSize.spread" required>-->
-
-    <!--      <label for="hasFlowers">Has Flowers:</label>-->
-    <!--      <input id="hasFlowers" type="checkbox" name="plantCharacteristics.hasFlowers">-->
-
-    <!--      <label for="hasLeaves">Has Leaves:</label>-->
-    <!--      <input id="hasLeaves" type="checkbox" name="plantCharacteristics.hasLeaves">-->
-
-    <!--      <label for="hasFruitsOrSeeds">Has Fruits or Seeds:</label>-->
-    <!--      <input id="hasFruitsOrSeeds" type="checkbox" name="plantCharacteristics.hasFruitsOrSeeds">-->
-
-    <!--      <label for="sunExposure">Sun Exposure:</label>-->
-    <!--      <select id="sunExposure" name="plantCharacteristics.sunExposure">-->
-    <!--        <option value="fullSun">Full Sun</option>-->
-    <!--        <option value="partialShade">Partial Shade</option>-->
-    <!--        <option value="fullShade">Full Shade</option>-->
-    <!--      </select>-->
-
-    <!--      <label for="flowerColor">Flower Color:</label>-->
-    <!--      <input id="flowerColor" type="text" name="plantCharacteristics.flowerColor">-->
-
-    <!--      <label for="name">Plant Name:</label>-->
-    <!--      <input id="name" type="text" name="identification.name">-->
-
-    <!--      <label for="status">Identification Status:</label>-->
-    <!--      <select id="status" name="identification.status">-->
-    <!--        <option value="completed">Completed</option>-->
-    <!--        <option value="inProgress">In Progress</option>-->
-    <!--      </select>-->
-
-    <!--      <label for="dbpediaURI">DBPedia URI:</label>-->
-    <!--      <input id="dbpediaURI" type="text" name="identification.dbpediaURI">-->
-
-    <!--      <label for="photo">Photo:</label>-->
-    <!--      <input id="photo" type="file" name="photo">-->
-
-    <!--      <label for="userNickname">User Nickname:</label>-->
-    <!--      <input id="userNickname" type="text" name="userNickname">-->
-
-    <!--      <button id="add_btn" type="submit">Add</button>-->
-    <!--    </form>-->
   </body>
   <script src="/javascripts/db.js"></script>
   <script src="/javascripts/insert.js"></script>

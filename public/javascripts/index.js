@@ -24,7 +24,7 @@ window.onload = function () {
                 if (permission === "granted") {
                     navigator.serviceWorker.ready
                         .then(function (serviceWorkerRegistration) {
-                            serviceWorkerRegistration.showNotification("Todo App",
+                            serviceWorkerRegistration.showNotification("Plant App",
                                 {body: "Notifications are enabled!"})
                                 .then(r =>
                                     console.log(r)
@@ -35,34 +35,46 @@ window.onload = function () {
         }
     }
     if (navigator.onLine) {
-        fetch('http://localhost:3000/todos')
-            .then(function (res) {
-                return res.json();
-            });
-
-        openSyncTodosIDB().then((db) => {
-            getAllSyncTodos(db).then(todos => {
-                console.log(todos)
-                if (todos.length === 0) {
-                    return;
-                }
-
-                todos.forEach(todo => {
-                    console.log(todo)
-                    postData('http://localhost:3000/add-todo', todo).then(data => {
-                        console.log(data);
-                        deleteSyncTodoFromIDB(db, todo.id)
-                    }).catch(error => {
-                        console.error('Error:', error);
-                    });
-                })
-
-                // if we synced data then refresh the page
-                window.location.reload();
-            });
-        });
-
+        fetchAndUpdatePlants();
     } else {
-        console.log("Offline mode")
+        console.log("Offline mode");
     }
 }
+
+async function fetchAndUpdatePlants() {
+    const db = await openSyncPlantsIDB();
+    const plants = await getAllSyncPlants(db);
+    let refresh = false;
+
+    if (plants.length > 0) {
+        await syncPlants(db, plants);
+        console.log("Synced plants");
+        refresh = true;
+    }
+
+    fetch('http://localhost:3000/plants')
+        .then(function (res) {
+            console.log("Fetched plants");
+            return res.json();
+        });
+
+    if (refresh) {
+        location.reload();
+    }
+}
+
+async function syncPlants(db, plants) {
+    for (const plant of plants) {
+        plant.photo = base64ToFile(plant.photo);
+        const formData = jsonToFormData(plant);
+
+        try {
+            const data = await postData('http://localhost:3000/add-plant', formData);
+            console.log(data);
+            await deleteSyncPlantFromIDB(db, plant.id);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+}
+

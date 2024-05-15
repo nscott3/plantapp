@@ -1,9 +1,9 @@
-// Function to get the todo list from the IndexedDB
-const getAllSyncTodos = (syncTodoIDB) => {
+// Function to get the plant list from the IndexedDB
+const getAllSyncPlants = (syncPlantIDB) => {
     return new Promise((resolve, reject) => {
-        const transaction = syncTodoIDB.transaction(["sync-todos"]);
-        const todoStore = transaction.objectStore("sync-todos");
-        const getAllRequest = todoStore.getAll();
+        const transaction = syncPlantIDB.transaction(["sync-plants"]);
+        const plantStore = transaction.objectStore("sync-plants");
+        const getAllRequest = plantStore.getAll();
 
         getAllRequest.addEventListener("success", () => {
             resolve(getAllRequest.result);
@@ -16,18 +16,18 @@ const getAllSyncTodos = (syncTodoIDB) => {
 }
 
 // Function to delete a syn
-const deleteSyncTodoFromIDB = (syncTodoIDB, id) => {
-    const transaction = syncTodoIDB.transaction(["sync-todos"], "readwrite")
-    const todoStore = transaction.objectStore("sync-todos")
-    const deleteRequest = todoStore.delete(id)
+const deleteSyncPlantFromIDB = (syncPlantIDB, id) => {
+    const transaction = syncPlantIDB.transaction(["sync-plants"], "readwrite")
+    const plantStore = transaction.objectStore("sync-plants")
+    const deleteRequest = plantStore.delete(id)
     deleteRequest.addEventListener("success", () => {
         console.log("Deleted " + id)
     })
 }
 
-function openSyncTodosIDB() {
+function openSyncPlantsIDB() {
     return new Promise((resolve, reject) => {
-        const request = indexedDB.open("sync-todos", 1);
+        const request = indexedDB.open("sync-plants", 1);
 
         request.onerror = function (event) {
             reject(new Error(`Database error: ${event.target}`));
@@ -35,7 +35,7 @@ function openSyncTodosIDB() {
 
         request.onupgradeneeded = function (event) {
             const db = event.target.result;
-            db.createObjectStore('sync-todos', {keyPath: 'id', autoIncrement: true});
+            db.createObjectStore('sync-plants', {keyPath: 'id', autoIncrement: true});
         };
 
         request.onsuccess = function (event) {
@@ -46,8 +46,8 @@ function openSyncTodosIDB() {
 }
 
 
-// Function to get all todos from IndexedDB
-function getAllTodos() {
+// Function to get all plants from IndexedDB
+function getAllPlants() {
     return new Promise((resolve, reject) => {
         const transaction = db.transaction([storeName], 'readonly');
         const objectStore = transaction.objectStore(storeName);
