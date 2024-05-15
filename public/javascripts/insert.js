@@ -26,6 +26,15 @@
 //         });
 // }
 
+function getBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+}
+
 window.onload = function () {
     // Add event listeners to buttons
     const add_form = document.getElementById("add_form")
@@ -33,7 +42,7 @@ window.onload = function () {
 
     add_form.addEventListener("submit", function(event) {
         event.preventDefault();
-        let plantData = {
+        let jsonData = {
             dateTimeSeen: document.getElementById("dateTimeSeen").value,
             location: document.getElementById("location").value,
             description: document.getElementById("description").value,
@@ -53,21 +62,25 @@ window.onload = function () {
                 status: document.getElementById("status").value,
                 dbpediaURI: document.getElementById("dbpediaURI").value
             },
-            userNickname: document.getElementById("userNickname").value
+            userNickname: document.getElementById("userNickname").value,
+            photo: document.getElementById("photo").files[0]
         };
-        console.log(plantData)
+        let formData = jsonToFormData(jsonData);
 
-        postData(url, plantData).then(data => {
+        postData(url, formData).then(data => {
             console.log(data);
             alert("Plant added successfully!");
         }).catch(error => {
             console.error('Error:', error);
             alert("Error adding plant! Must be offline!", error);
 
+            getBase64(jsonData.photo).then(base64 => {
+                jsonData.photo = base64;
+            });
             openSyncPlantsIDB().then((db) => {
                 const transaction = db.transaction(['sync-plants'], 'readwrite');
                 const objectStore = transaction.objectStore('sync-plants');
-                const request = objectStore.add(plantData);
+                const request = objectStore.add(jsonData);
 
                 request.onsuccess = function (event) {
                     console.log("Plant added successfully!");

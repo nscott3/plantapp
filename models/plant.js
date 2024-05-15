@@ -28,7 +28,7 @@ let plantSchema = new mongoose.Schema({
         status: { type: String, enum: ['completed', 'inProgress'] },
         dbpediaURI: String
     },
-    photo: Buffer,
+    photo: { type: String },
     userNickname: String,
     // chat: [{
     //     userNickname: String,

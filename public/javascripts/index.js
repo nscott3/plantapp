@@ -35,34 +35,46 @@ window.onload = function () {
         }
     }
     if (navigator.onLine) {
-        fetch('http://localhost:3000/plants')
-            .then(function (res) {
-                return res.json();
-            });
-
-        openSyncPlantsIDB().then((db) => {
-            getAllSyncPlants(db).then(plants => {
-                console.log(plants)
-                if (plants.length === 0) {
-                    return;
-                }
-
-                plants.forEach(plant => {
-                    console.log(plant)
-                    postData('http://localhost:3000/add-plant', plant).then(data => {
-                        console.log(data);
-                        deleteSyncPlantFromIDB(db, plant.id)
-                    }).catch(error => {
-                        console.error('Error:', error);
-                    });
-                })
-
-                // if we synced data then refresh the page
-                window.location.reload();
-            });
-        });
-
+        fetchAndUpdatePlants();
     } else {
-        console.log("Offline mode")
+        console.log("Offline mode");
     }
 }
+
+async function fetchAndUpdatePlants() {
+    const db = await openSyncPlantsIDB();
+    const plants = await getAllSyncPlants(db);
+    let refresh = false;
+
+    if (plants.length > 0) {
+        await syncPlants(db, plants);
+        console.log("Synced plants");
+        refresh = true;
+    }
+
+    fetch('http://localhost:3000/plants')
+        .then(function (res) {
+            console.log("Fetched plants");
+            return res.json();
+        });
+
+    if (refresh) {
+        location.reload();
+    }
+}
+
+async function syncPlants(db, plants) {
+    for (const plant of plants) {
+        plant.photo = base64ToFile(plant.photo);
+        const formData = jsonToFormData(plant);
+
+        try {
+            const data = await postData('http://localhost:3000/add-plant', formData);
+            console.log(data);
+            await deleteSyncPlantFromIDB(db, plant.id);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+}
+

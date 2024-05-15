@@ -2,7 +2,7 @@
 const plantModel = require('../models/plant');
 
 // Function to create new todos
-exports.create = function (userData) {
+exports.create = function (userData, file) {
     console.log('userData', userData);
     let plant = new plantModel({
         dateTimeSeen: userData.dateTimeSeen,
@@ -24,7 +24,8 @@ exports.create = function (userData) {
             status: userData.identification.status,
             dbpediaURI: userData.identification.dbpediaURI
         },
-        userNickname: userData.userNickname
+        userNickname: userData.userNickname,
+        photo: file.path
     });
     return plant.save().then(plant => {
         console.log(plant);
