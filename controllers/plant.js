@@ -5,7 +5,26 @@ const plantModel = require('../models/plant');
 exports.create = function (userData) {
     console.log('userData', userData);
     let plant = new plantModel({
+        dateTimeSeen: userData.dateTimeSeen,
+        location: userData.location,
         description: userData.description,
+        plantSize: {
+            height: userData.plantSize.height,
+            spread: userData.plantSize.spread
+        },
+        plantCharacteristics: {
+            hasFlowers: userData.plantCharacteristics.hasFlowers,
+            hasLeaves: userData.plantCharacteristics.hasLeaves,
+            hasFruitsOrSeeds: userData.plantCharacteristics.hasFruitsOrSeeds,
+            sunExposure: userData.plantCharacteristics.sunExposure,
+            flowerColor: userData.plantCharacteristics.flowerColor
+        },
+        identification: {
+            name: userData.identification.name,
+            status: userData.identification.status,
+            dbpediaURI: userData.identification.dbpediaURI
+        },
+        userNickname: userData.userNickname
     });
     return plant.save().then(plant => {
         console.log(plant);
