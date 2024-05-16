@@ -5,25 +5,47 @@
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/images/plant-icon.png" type="image/x-icon">
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/javascripts/db.js"></script>
+    <script src="/javascripts/insert.js"></script>
+    <script src="/javascripts/idb-utility.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
   </head>
   <body>
-    <h1><%= title %></h1>
-    <a href="/">Go back to the homepage</a>
-    <br>
-<!--    <form id="add_form">-->
-<!--      <label for="description">-->
-<!--        <span class="new_plant">New</span>-->
-<!--        <span class="update_plant">Update</span> plant: </label>-->
-<!--      <input id="description" type="text" name="description" required>-->
-<!--      <button id="add_btn" class="new_plant" type="submit">Add</button>-->
-<!--    </form>-->
+    <%- include('header.ejs') %>
     <form id="add_form"> <!-- action="/add-plant" method="POST" enctype="multipart/form-data" -->
       <label for="dateTimeSeen">Date and Time Seen:</label>
-      <input id="dateTimeSeen" type="datetime-local" name="dateTimeSeen" required>
+      <input id="dateTimeSeen" type="datetime-local" name="dateTimeSeen" required value="<%= dateTimeSeen %>">
 
       <label for="location">Location:</label>
-      <input id="location" type="text" name="location" required>
+      <input type="hidden" id="latitude" name="latitude" required>
+      <input type="hidden" id="longitude" name="longitude" required>
+      <div id="map" style="height: 200px;"></div>
+      <script>
+        const map = L.map('map').setView([53.38395656914948, -1.4921532734702658], 13);
 
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+          maxZoom: 18,
+        }).addTo(map);
+
+        let marker = null;
+
+        map.on('click', function(e) {
+          const { lat, lng } = e.latlng;
+          if (marker) {
+            map.removeLayer(marker);
+          }
+          marker = L.marker([lat, lng]).addTo(map);
+          document.getElementById('latitude').value = lat;
+          document.getElementById('longitude').value = lng;
+        });
+      </script>
       <label for="description">Description:</label>
       <textarea id="description" name="description" required></textarea>
 
@@ -65,7 +87,7 @@
       <input id="dbpediaURI" type="text" name="identification.dbpediaURI">
 
       <label for="photo">Photo:</label>
-      <input type="file" id="photo" name="photo" accept="image/*">
+      <input type="file" id="photo" name="photo" accept="image/*" required>
 
       <label for="userNickname">User Nickname:</label>
       <input id="userNickname" type="text" name="userNickname">
@@ -73,7 +95,4 @@
       <button id="add_btn" class="new_plant" type="submit">Add</button>
     </form>
   </body>
-  <script src="/javascripts/db.js"></script>
-  <script src="/javascripts/insert.js"></script>
-  <script src="/javascripts/idb-utility.js"></script>
 </html>

@@ -62,7 +62,15 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/insert', function(req, res, next) {
-    res.render('insert', { title: 'Insert a Plant' });
+    let date = new Date();
+    let day = ("0" + date.getDate()).slice(-2);
+    let month = ("0" + (date.getMonth() + 1)).slice(-2);
+    let year = date.getFullYear();
+    let hours = ("0" + date.getHours()).slice(-2);
+    let minutes = ("0" + date.getMinutes()).slice(-2);
+    let formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+    res.render('insert', { title: 'Insert a Plant', dateTimeSeen: formattedDate });
 });
 
 // route to get all plants

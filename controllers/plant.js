@@ -6,7 +6,13 @@ exports.create = function (userData, file) {
     console.log('userData', userData);
     let plant = new plantModel({
         dateTimeSeen: userData.dateTimeSeen,
-        location: userData.location,
+        location: {
+            type: userData.location.type,
+            coordinates: [
+                userData.location.latitude,
+                userData.location.longitude
+            ]
+        },
         description: userData.description,
         plantSize: {
             height: userData.plantSize.height,

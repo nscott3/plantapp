@@ -44,7 +44,13 @@ window.onload = function () {
         event.preventDefault();
         let jsonData = {
             dateTimeSeen: document.getElementById("dateTimeSeen").value,
-            location: document.getElementById("location").value,
+            location: {
+                type: "Point",
+                coordinates: [
+                    +document.getElementById("latitude").value,
+                    +document.getElementById("longitude").value
+                ]
+            },
             description: document.getElementById("description").value,
             plantSize: {
                 height: document.getElementById("height").value,
@@ -65,6 +71,7 @@ window.onload = function () {
             userNickname: document.getElementById("userNickname").value,
             photo: document.getElementById("photo").files[0]
         };
+        console.log(jsonData)
         let formData = jsonToFormData(jsonData);
 
         postData(url, formData).then(data => {
