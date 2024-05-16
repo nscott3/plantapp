@@ -210,6 +210,18 @@ form#add_form .checkbox-item {
 .suggestions_card h2 {
     margin-top: 0px;
 }
+.suggestions_card .suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.suggestions_card .suggestion {
+  display: flex;
+  justify-content: space-between;
+}
+.suggestions_card .suggestion p {
+    margin: 0;
+}
 
 /* Settings */
 .nickname_container {

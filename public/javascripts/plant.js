@@ -4,6 +4,16 @@ window.onload = function () {
     if (!nickname) {
         // Redirect to the settings page
         window.location.href = '/settings';
+    } else {
+        const acceptSuggestionButtons = document.querySelectorAll('.accept_suggestion');
+        acceptSuggestionButtons.forEach(button => {
+            let author = button.getAttribute('data-nickname');
+            let status = button.getAttribute('data-status');
+
+            if (status === 'completed' || author !== nickname) {
+                button.style.display = 'none';
+            }
+        });
     }
 
     const searchInput = document.getElementById('searchInput');

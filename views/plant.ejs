@@ -93,12 +93,14 @@
                 <div class="suggestions_card">
                     <h2>Suggestions</h2>
                     <div class="suggestions">
+                        <input type="hidden" id="nicknameInput" name="nicknameInput">
                         <% data.suggestions.forEach(suggestion => { %>
                             <div class="suggestion">
-                                <p><strong><%= suggestion.userNickname %></strong> suggested <strong><%= suggestion.name %></strong> on <%= formatDate(suggestion.timestamp) %> </p>
-                                <p><strong>DBPedia URI:</strong> <a href="<%= suggestion.dbpediaURI %>" target="_blank"><%= suggestion.dbpediaURI %></a></p>
+                                <p>- <strong><%= suggestion.userNickname %></strong> suggested <a href="<%= suggestion.dbpediaURI %>"><%= suggestion.name %></a> on <%= formatDate(suggestion.timestamp) %> </p>
 
-                                <button class="accept_suggestion" data-suggestion-id="<%= suggestion._id %>">Accept</button>
+                                <button class="accept_suggestion" data-suggestion-id="<%= suggestion._id %>" data-status="<%= data.identification.status %>" data-nickname="<%= data.userNickname %>">
+                                    Accept
+                                </button>
                             </div>
                         <% }) %>
                     </div>
