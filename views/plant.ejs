@@ -17,6 +17,29 @@
                 crossorigin=""></script>
     </head>
     <body>
+        <%
+        function getSunExposureName(value) {
+            switch(value) {
+                case 'fullSun':
+                    return 'Full Sun';
+                case 'partialShade':
+                    return 'Partial Shade';
+                case 'fullShade':
+                    return 'Full Shade';
+                default:
+                    return value;
+            }
+        }
+
+        function getStatusName(value) {
+            switch(value) {
+                case 'completed':
+                    return 'Completed';
+                case 'inProgress':
+                    return 'In Progress';
+            }
+        }
+        %>
         <%- include('header.ejs') %>
         <div class="plant_grid">
             <div class="plant_card">
@@ -26,6 +49,8 @@
                 <div class="plant_info">
                     <h2><%= data.identification.name %></h2>
                     <p>By <%= data.userNickname %> on <%= data.dateTimeSeen.split('T')[0] %> <%= data.dateTimeSeen.split('T')[1].split('.')[0] %></p>
+                    <p><strong>Status:</strong> <%= getStatusName(data.identification.status) %></p>
+                    <p><strong>DBPedia URI:</strong> <a href="<%= data.identification.dbpediaURI %>" target="_blank"><%= data.identification.dbpediaURI %></a></p>
                     <p><strong>Description:</strong></p>
                     <p><%= data.description %></p>
                     <p><strong>Height:</strong> <%= data.plantSize.height %> cm</p>
@@ -33,20 +58,7 @@
                     <p><strong>Flowers:</strong> <%= data.plantCharacteristics.hasFlowers ? 'Yes' : 'No' %></p>
                     <p><strong>Leaves:</strong> <%= data.plantCharacteristics.hasLeaves ? 'Yes' : 'No' %></p>
                     <p><strong>Fruits/Seeds:</strong> <%= data.plantCharacteristics.hasFruitsOrSeeds ? 'Yes' : 'No' %></p>
-                    <%
-                    function getSunExposureName(value) {
-                        switch(value) {
-                            case 'fullSun':
-                                return 'Full Sun';
-                            case 'partialShade':
-                                return 'Partial Shade';
-                            case 'fullShade':
-                                return 'Full Shade';
-                            default:
-                                return value;
-                        }
-                    }
-                    %>
+
                     <p><strong>Sun Exposure:</strong> <%= getSunExposureName(data.plantCharacteristics.sunExposure) %></p>
                     <% if (data.plantCharacteristics.flowerColor) { %>
                         <p><strong>Flower Color:</strong> <%= data.plantCharacteristics.flowerColor %></p>

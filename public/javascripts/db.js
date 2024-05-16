@@ -24,7 +24,9 @@ function base64ToFile(base64) {
 function jsonToFormData(json) {
     let formData = new FormData();
     formData.append('dateTimeSeen', json.dateTimeSeen);
-    formData.append('location', json.location);
+    formData.append('location[type]', json.location.type);
+    formData.append('location[latitude]', json.location.coordinates[0]);
+    formData.append('location[longitude]', json.location.coordinates[1]);
     formData.append('description', json.description);
     formData.append('plantSize[height]', json.plantSize.height);
     formData.append('plantSize[spread]', json.plantSize.spread);
