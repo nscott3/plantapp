@@ -157,3 +157,21 @@ form#add_form button:hover {
   object-fit: cover;
   border-radius: 5px;
 }
+
+/* DBPedia suggest */
+.suggest-name {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.suggest-name .suggest-name-input {
+  display: flex;
+}
+
+.suggest-name-input .search_button {
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

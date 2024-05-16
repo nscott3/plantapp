@@ -31,7 +31,8 @@ exports.create = function (userData, file) {
             dbpediaURI: userData.identification.dbpediaURI
         },
         userNickname: userData.userNickname,
-        photo: file.path
+        photo: file.path,
+        suggestions: []
     });
     return plant.save().then(plant => {
         console.log(plant);
@@ -67,6 +68,38 @@ exports.getOne = function (id) {
     return plantModel.findById(id).then(plant => {
         // Return the plant as a JSON string
         return JSON.stringify(plant);
+    }).catch(err => {
+        // Log the error if retrieval fails
+        console.log(err);
+
+        // Return null in case of an error
+        return null;
+    });
+}
+
+// suggestions: [
+//     {
+//         userNickname: String,
+//         name: String,
+//         dbpediaURI: String,
+//         timestamp: { type: Date, default: Date.now }
+//     }
+// ]
+// Function to update one plant
+exports.addSuggestion = function (id, suggestion) {
+    // Retrieve one plant from the database
+    return plantModel.findById(id).then(plant => {
+        plant.suggestions.push(suggestion);
+        return plant.save().then(plant => {
+            // Return the plant as a JSON string
+            return JSON.stringify(plant);
+        }).catch(err => {
+            // Log the error if saving fails
+            console.log(err);
+
+            // Return null in case of an error
+            return null;
+        });
     }).catch(err => {
         // Log the error if retrieval fails
         console.log(err);
