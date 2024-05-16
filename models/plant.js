@@ -30,6 +30,14 @@ let plantSchema = new mongoose.Schema({
     },
     photo: { type: String },
     userNickname: String,
+    suggestions: [
+        {
+            userNickname: String,
+            name: String,
+            dbpediaURI: String,
+            timestamp: { type: Date, default: Date.now }
+        }
+    ]
     // chat: [{
     //     userNickname: String,
     //     message: String,

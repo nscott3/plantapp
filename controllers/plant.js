@@ -31,7 +31,8 @@ exports.create = function (userData, file) {
             dbpediaURI: userData.identification.dbpediaURI
         },
         userNickname: userData.userNickname,
-        photo: file.path
+        photo: file.path,
+        suggestions: []
     });
     return plant.save().then(plant => {
         console.log(plant);
@@ -67,6 +68,56 @@ exports.getOne = function (id) {
     return plantModel.findById(id).then(plant => {
         // Return the plant as a JSON string
         return JSON.stringify(plant);
+    }).catch(err => {
+        // Log the error if retrieval fails
+        console.log(err);
+
+        // Return null in case of an error
+        return null;
+    });
+}
+
+// Function to add suggestion for plant
+exports.addSuggestion = function (id, suggestion) {
+    // Retrieve one plant from the database
+    return plantModel.findById(id).then(plant => {
+        plant.suggestions.push(suggestion);
+        return plant.save().then(plant => {
+            // Return the plant as a JSON string
+            return JSON.stringify(plant);
+        }).catch(err => {
+            // Log the error if saving fails
+            console.log(err);
+
+            // Return null in case of an error
+            return null;
+        });
+    }).catch(err => {
+        // Log the error if retrieval fails
+        console.log(err);
+
+        // Return null in case of an error
+        return null;
+    });
+}
+
+// Function to accept suggestion to plant
+exports.acceptSuggestion = function (id, suggestionId) {
+    // Retrieve one plant from the database
+    return plantModel.findById(id).then(plant => {
+        plant.identification.name = plant.suggestions.id(suggestionId).name;
+        plant.identification.dbpediaURI = plant.suggestions.id(suggestionId).dbpediaURI;
+        plant.identification.status = 'completed';
+        return plant.save().then(plant => {
+            // Return the plant as a JSON string
+            return JSON.stringify(plant);
+        }).catch(err => {
+            // Log the error if saving fails
+            console.log(err);
+
+            // Return null in case of an error
+            return null;
+        });
     }).catch(err => {
         // Log the error if retrieval fails
         console.log(err);
