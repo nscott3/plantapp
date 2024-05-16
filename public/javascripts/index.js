@@ -1,5 +1,12 @@
 // Register service worker to control making site work offline
-window.onload = function () {
+window.addEventListener('load', function() {
+    // Check if nickname is set in local storage
+    let nickname = localStorage.getItem('nickname');
+    if (!nickname) {
+        // Redirect to the settings page
+        window.location.href = '/settings';
+    }
+
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js', {scope: '/'})
             .then(function (reg) {
@@ -39,7 +46,7 @@ window.onload = function () {
     } else {
         console.log("Offline mode");
     }
-}
+});
 
 async function fetchAndUpdatePlants() {
     const db = await openSyncPlantsIDB();

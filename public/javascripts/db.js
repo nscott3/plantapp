@@ -37,7 +37,6 @@ function jsonToFormData(json) {
     formData.append('plantCharacteristics[flowerColor]', json.plantCharacteristics.flowerColor);
     formData.append('identification[name]', json.identification.name);
     formData.append('identification[status]', json.identification.status);
-    formData.append('identification[dbpediaURI]', json.identification.dbpediaURI);
     formData.append('userNickname', json.userNickname);
     formData.append('photo', json.photo);
     return formData;

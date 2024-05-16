@@ -1,4 +1,11 @@
 window.onload = function () {
+    // Check if nickname is set in local storage
+    let nickname = localStorage.getItem('nickname');
+    if (!nickname) {
+        // Redirect to the settings page
+        window.location.href = '/settings';
+    }
+
     const searchInput = document.getElementById('searchInput');
     const searchResults = document.getElementById('searchResults');
     const pathArray = window.location.pathname.split('/');
@@ -24,9 +31,6 @@ window.onload = function () {
 
     const searchButton = document.getElementById('searchButton');
     searchButton.addEventListener('click', function () {
-        // Get the necessary data
-        const userNickname = "nathan";
-
         // Get the selected option from the datalist
         const selectedOption = Array.from(searchResults.options).find(option => option.value === searchInput.value);
 
@@ -38,7 +42,7 @@ window.onload = function () {
 
         // Create the suggestion object
         const suggestion = {
-            userNickname: userNickname,
+            userNickname: nickname,
             name: name,
             dbpediaURI: dbpediaURI
         };

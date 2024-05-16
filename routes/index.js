@@ -183,4 +183,8 @@ router.post('/plant/:id/accept-suggestion/:suggestionId', function(req, res, nex
     });
 });
 
+router.get('/settings', function(req, res, next) {
+    res.render('settings', { title: 'Settings' });
+});
+
 module.exports = router;
