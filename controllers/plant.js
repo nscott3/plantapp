@@ -40,11 +40,11 @@ exports.create = function (userData, file) {
     });
 };
 
-// Function to get all todos
+// Function to get all plants
 exports.getAll = function () {
-    // Retrieve all todos from the database
+    // Retrieve all plants from the database
     return plantModel.find({}).then(plants => {
-        // Return the list of todos as a JSON string
+        // Return the list of plants as a JSON string
         return JSON.stringify(plants);
     }).catch(err => {
         // Log the error if retrieval fails
@@ -55,3 +55,17 @@ exports.getAll = function () {
     });
 };
 
+// Function to get one plant
+exports.getOne = function (id) {
+    // Retrieve one plant from the database
+    return plantModel.findById(id).then(plant => {
+        // Return the plant as a JSON string
+        return JSON.stringify(plant);
+    }).catch(err => {
+        // Log the error if retrieval fails
+        console.log(err);
+
+        // Return null in case of an error
+        return null;
+    });
+}

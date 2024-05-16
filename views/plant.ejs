@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= title %></title>
+        <link rel="manifest" href="/manifest.json">
+        <link rel="icon" href="/images/plant-icon.png" type="image/x-icon">
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+        <script src="/javascripts/db.js"></script>
+        <script src="/javascripts/index.js"></script>
+        <script src="/javascripts/idb-utility.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+              integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+              crossorigin=""/>
+        <!-- Make sure you put this AFTER Leaflet's CSS -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+                integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+                crossorigin=""></script>
+    </head>
+    <body>
+        <%- include('header.ejs') %>
+        <div class="plant_grid">
+            <div class="plant_card">
+                <div class="plant_image">
+                    <img src="../<%= data.photo %>" alt="<%= data.identification.name %>" />
+                </div>
+                <div class="plant_info">
+                    <h2><%= data.identification.name %></h2>
+                    <p>By <%= data.userNickname %> on <%= data.dateTimeSeen.split('T')[0] %> <%= data.dateTimeSeen.split('T')[1].split('.')[0] %></p>
+                    <p><strong>Description:</strong></p>
+                    <p><%= data.description %></p>
+                    <p><strong>Height:</strong> <%= data.plantSize.height %> cm</p>
+                    <p><strong>Spread:</strong> <%= data.plantSize.spread %> cm</p>
+                    <p><strong>Flowers:</strong> <%= data.plantCharacteristics.hasFlowers ? 'Yes' : 'No' %></p>
+                    <p><strong>Leaves:</strong> <%= data.plantCharacteristics.hasLeaves ? 'Yes' : 'No' %></p>
+                    <p><strong>Fruits/Seeds:</strong> <%= data.plantCharacteristics.hasFruitsOrSeeds ? 'Yes' : 'No' %></p>
+                    <%
+                    function getSunExposureName(value) {
+                        switch(value) {
+                            case 'fullSun':
+                                return 'Full Sun';
+                            case 'partialShade':
+                                return 'Partial Shade';
+                            case 'fullShade':
+                                return 'Full Shade';
+                            default:
+                                return value;
+                        }
+                    }
+                    %>
+                    <p><strong>Sun Exposure:</strong> <%= getSunExposureName(data.plantCharacteristics.sunExposure) %></p>
+                    <% if (data.plantCharacteristics.flowerColor) { %>
+                        <p><strong>Flower Color:</strong> <%= data.plantCharacteristics.flowerColor %></p>
+                    <% } %>
+                    <p><strong>Location:</strong></p>
+                    <div id="map" style="height: 200px;"></div>
+                    <script>
+                        const map = L.map('map').setView([<%= data.location.coordinates %>], 13);
+
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+                            maxZoom: 18,
+                        }).addTo(map);
+
+                        const marker = L.marker([<%= data.location.coordinates %>]).addTo(map);
+                    </script>
+                </div>
+            </div>
+            <div class="plant_chat">
+            </div>
+        </div>
+    </body>
+</html>
