@@ -5,10 +5,7 @@
         <link rel="manifest" href="/manifest.json">
         <link rel="icon" href="/images/plant-icon.png" type="image/x-icon">
         <link rel='stylesheet' href='/stylesheets/style.css' />
-        <script src="/javascripts/db.js"></script>
-        <script src="/javascripts/index.js"></script>
-        <script src="/javascripts/idb-utility.js"></script>
-        <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+        <script src="/javascripts/plant.js"></script>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
               integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
               crossorigin=""/>
@@ -17,7 +14,7 @@
                 integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
                 crossorigin=""></script>
     </head>
-    <body onload="init()">
+    <body>
         <%
         function getSunExposureName(value) {
             switch(value) {
@@ -40,6 +37,10 @@
                     return 'In Progress';
             }
         }
+
+        function formatDate(date) {
+            return `${date.split('T')[0]} ${date.split('T')[1].split('.')[0]}`;
+        }
         %>
         <%- include('header.ejs') %>
         <div class="plant_grid">
@@ -48,8 +49,18 @@
                     <img src="../<%= data.photo %>" alt="<%= data.identification.name %>" />
                 </div>
                 <div class="plant_info">
-                    <h2><%= data.identification.name %></h2>
-                    <p>By <%= data.userNickname %> on <%= data.dateTimeSeen.split('T')[0] %> <%= data.dateTimeSeen.split('T')[1].split('.')[0] %></p>
+                    <div class="suggest-name">
+                        <h2><%= data.identification.name %></h2>
+                        <div class="suggest-name-input">
+                            <input type="text" id="searchInput" name="searchInput" placeholder="Suggest change" list="searchResults">
+                            <datalist id="searchResults"></datalist>
+                            <button class="search_button" id="searchButton">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <p>By <%= data.userNickname %> on <%= formatDate(data.dateTimeSeen) %></p>
                     <p><strong>Status:</strong> <%= getStatusName(data.identification.status) %></p>
                     <p><strong>DBPedia URI:</strong> <a href="<%= data.identification.dbpediaURI %>" target="_blank"><%= data.identification.dbpediaURI %></a></p>
                     <p><strong>Description:</strong></p>
@@ -79,26 +90,19 @@
                 </div>
             </div>
             <div class="plant_chat">
-                <form onsubmit="return false;">
-                    <p><label for="name"> Your name </label>
-                        <input type="text" id="name" name="name">
-                    </p>
+                <div class="suggestions_card">
+                    <h2>Suggestions</h2>
+                    <div class="suggestions">
+                        <input type="hidden" id="nicknameInput" name="nicknameInput">
+                        <% data.suggestions.forEach(suggestion => { %>
+                            <div class="suggestion">
+                                <p>- <strong><%= suggestion.userNickname %></strong> suggested <a href="<%= suggestion.dbpediaURI %>"><%= suggestion.name %></a> on <%= formatDate(suggestion.timestamp) %> </p>
 
-                    <button id="connect" onclick="connectToRoom()">Submit</button>
-                </form>
-                <div id="chat_interface" style="display: inline">
-                    <div>
-                        <div id="who_you_are" style="display: inline"></div><div id="in_room" style="display: inline"></div>
-                    </div>
-                    <div id="history" class="boxed"></div>
-                    <div id="input" class="bottom boxed">
-                        <form onsubmit="return false;" style="width: 100%">
-                            <p>
-                                <label for="name"> chat: </label>
-                                <input type="text" id="chat_input" name="chat_input" style="width: 80%">
-                                <button id="chat_send" onclick="sendChatText()">Send</button>
-                            </p>
-                        </form>
+                                <button class="accept_suggestion" data-suggestion-id="<%= suggestion._id %>" data-status="<%= data.identification.status %>" data-nickname="<%= data.userNickname %>">
+                                    Accept
+                                </button>
+                            </div>
+                        <% }) %>
                     </div>
                 </div>
             </div>

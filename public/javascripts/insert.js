@@ -36,6 +36,15 @@ function getBase64(file) {
 }
 
 window.onload = function () {
+    // Check if nickname is set in local storage
+    let nickname = localStorage.getItem('nickname');
+    if (!nickname) {
+        // Redirect to the settings page
+        window.location.href = '/settings';
+    } else {
+        document.getElementById("userNickname").value = nickname;
+    }
+
     // Add event listeners to buttons
     const add_form = document.getElementById("add_form")
     const url = 'http://localhost:3000/add-plant';
@@ -65,8 +74,7 @@ window.onload = function () {
             },
             identification: {
                 name: document.getElementById("name").value,
-                status: document.getElementById("status").value,
-                dbpediaURI: document.getElementById("dbpediaURI").value
+                status: document.getElementById("status").value
             },
             userNickname: document.getElementById("userNickname").value,
             photo: document.getElementById("photo").files[0]
