@@ -175,3 +175,14 @@ form#add_form button:hover {
   align-items: center;
   justify-content: center;
 }
+
+/* Suggestions */
+.suggestions_card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  background: #f9f9f9;
+}
+.suggestions_card h2 {
+    margin-top: 0px;
+}

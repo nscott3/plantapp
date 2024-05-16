@@ -170,4 +170,17 @@ router.post('/plant/:id/add-suggestion/', function(req, res, next) {
     });
 });
 
+router.post('/plant/:id/accept-suggestion/:suggestionId', function(req, res, next) {
+    const objectId = new ObjectId(req.params.id);
+    const suggestionId = new ObjectId(req.params.suggestionId);
+
+    plantController.acceptSuggestion(objectId, suggestionId).then(plant => {
+        console.log(plant);
+        res.status(200).send(plant);
+    }).catch(err => {
+        console.log(err);
+        res.status(500).send(err);
+    });
+});
+
 module.exports = router;

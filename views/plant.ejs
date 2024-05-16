@@ -40,6 +40,10 @@
                     return 'In Progress';
             }
         }
+
+        function formatDate(date) {
+            return `${date.split('T')[0]} ${date.split('T')[1].split('.')[0]}`;
+        }
         %>
         <%- include('header.ejs') %>
         <div class="plant_grid">
@@ -59,7 +63,7 @@
                         </div>
                     </div>
 
-                    <p>By <%= data.userNickname %> on <%= data.dateTimeSeen.split('T')[0] %> <%= data.dateTimeSeen.split('T')[1].split('.')[0] %></p>
+                    <p>By <%= data.userNickname %> on <%= formatDate(data.dateTimeSeen) %></p>
                     <p><strong>Status:</strong> <%= getStatusName(data.identification.status) %></p>
                     <p><strong>DBPedia URI:</strong> <a href="<%= data.identification.dbpediaURI %>" target="_blank"><%= data.identification.dbpediaURI %></a></p>
                     <p><strong>Description:</strong></p>
@@ -89,6 +93,19 @@
                 </div>
             </div>
             <div class="plant_chat">
+                <div class="suggestions_card">
+                    <h2>Suggestions</h2>
+                    <div class="suggestions">
+                        <% data.suggestions.forEach(suggestion => { %>
+                            <div class="suggestion">
+                                <p><strong><%= suggestion.userNickname %></strong> suggested <strong><%= suggestion.name %></strong> on <%= formatDate(suggestion.timestamp) %> </p>
+                                <p><strong>DBPedia URI:</strong> <a href="<%= suggestion.dbpediaURI %>" target="_blank"><%= suggestion.dbpediaURI %></a></p>
+
+                                <button class="accept_suggestion" data-suggestion-id="<%= suggestion._id %>">Accept</button>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
             </div>
         </div>
     </body>

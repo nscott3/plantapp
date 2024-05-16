@@ -1,6 +1,8 @@
 window.onload = function () {
     const searchInput = document.getElementById('searchInput');
     const searchResults = document.getElementById('searchResults');
+    const pathArray = window.location.pathname.split('/');
+    const plantId = pathArray[pathArray.length - 1];
 
     searchInput.addEventListener('input', function () {
         fetch(`/dbpedia?searchInput=${searchInput.value}`)
@@ -41,9 +43,6 @@ window.onload = function () {
             dbpediaURI: dbpediaURI
         };
 
-        const pathArray = window.location.pathname.split('/');
-        const plantId = pathArray[pathArray.length - 1];
-
         // Make the POST request
         fetch(`/plant/${plantId}/add-suggestion/`, {
             method: 'POST',
@@ -60,5 +59,26 @@ window.onload = function () {
             .catch((error) => {
                 console.error('Error:', error);
             });
+    });
+
+    // add all event listeners to class="accept_suggestion"
+    const acceptSuggestionButtons = document.querySelectorAll('.accept_suggestion');
+    acceptSuggestionButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const suggestionId = button.getAttribute('data-suggestion-id');
+
+            // Make the POST request
+            fetch(`/plant/${plantId}/accept-suggestion/${suggestionId}`, {
+                method: 'POST',
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    alert("Suggestion accepted successfully!")
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        });
     });
 }
