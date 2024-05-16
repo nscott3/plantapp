@@ -18,6 +18,7 @@ self.addEventListener('install', event => {
                 '/javascripts/index.js',
                 '/javascripts/idb-utility.js',
                 '/javascripts/db.js',
+                '/javascripts/search.js',
                 '/stylesheets/style.css',
                 '/images/image_icon.png',
             ]);

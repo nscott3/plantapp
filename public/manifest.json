@@ -1,16 +1,16 @@
 {
   "lang": "en-uk",
-  "name": "Image of the day app",
-  "short_name": "My image of the day",
-  "description": "A basic application that fecthes the image of the day from an API",
+  "name": "Plant Recognition App",
+  "short_name": "PlantApp",
+  "description": "An app to record and identify plants",
   "start_url": "/",
-  "background_color": "#2f3d58",
-  "theme_color": "#2f3d58",
+  "background_color": "#ffffff",
+  "theme_color": "#4caf50",
   "orientation": "any",
   "display": "standalone",
   "icons": [
     {
-      "src": "/images/image_icon.png",
+      "src": "/images/plant-icon.png",
       "sizes": "512x512"
     }
   ]
