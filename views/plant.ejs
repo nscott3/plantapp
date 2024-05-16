@@ -97,12 +97,27 @@
                         <% data.suggestions.forEach(suggestion => { %>
                             <div class="suggestion">
                                 <p>- <strong><%= suggestion.userNickname %></strong> suggested <a href="<%= suggestion.dbpediaURI %>"><%= suggestion.name %></a> on <%= formatDate(suggestion.timestamp) %> </p>
-
                                 <button class="accept_suggestion" data-suggestion-id="<%= suggestion._id %>" data-status="<%= data.identification.status %>" data-nickname="<%= data.userNickname %>">
                                     Accept
                                 </button>
                             </div>
                         <% }) %>
+                    </div>
+                </div>
+                <div id="chat_interface" style="display: inline; margin-top: 20px;">
+                    <div>
+                        <div id="who_you_are" style="display: inline"></div>
+                        <div id="in_room" style="display: inline"></div>
+                    </div>
+                    <div id="history" class="boxed"></div>
+                    <div id="input" class="bottom boxed">
+                        <form onsubmit="return false;" style="width: 100%">
+                            <p>
+                                <label for="name"> chat: </label>
+                                <input type="text" id="chat_input" name="chat_input" style="width: 80%">
+                                <button id="chat_send" onclick="sendChatText()">Send</button>
+                            </p>
+                        </form>
                     </div>
                 </div>
             </div>
