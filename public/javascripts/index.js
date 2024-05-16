@@ -118,7 +118,7 @@ function sendChatText() {
 
 /**
  * it appends the given html text to the history div
- * @param text: teh text to append
+ * @param text: the text to append
  */
 function writeOnHistory(text) {
     let history = document.getElementById('history');

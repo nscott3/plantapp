@@ -79,9 +79,16 @@
                 </div>
             </div>
             <div class="plant_chat">
-                <div id="chat_interface" style="display: none">
+                <form onsubmit="return false;">
+                    <p><label for="name"> Your name </label>
+                        <input type="text" id="name" name="name">
+                    </p>
+
+                    <button id="connect" onclick="connectToRoom()">Submit</button>
+                </form>
+                <div id="chat_interface" style="display: inline">
                     <div>
-                        <div id="who_you_are" style="display: inline"></div>, you are in room: <div id="in_room" style="display: inline"></div>
+                        <div id="who_you_are" style="display: inline"></div><div id="in_room" style="display: inline"></div>
                     </div>
                     <div id="history" class="boxed"></div>
                     <div id="input" class="bottom boxed">
