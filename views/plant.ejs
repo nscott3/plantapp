@@ -8,6 +8,7 @@
         <script src="/javascripts/db.js"></script>
         <script src="/javascripts/index.js"></script>
         <script src="/javascripts/idb-utility.js"></script>
+        <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
               integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
               crossorigin=""/>
@@ -16,7 +17,7 @@
                 integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
                 crossorigin=""></script>
     </head>
-    <body>
+    <body onload="init()">
         <%
         function getSunExposureName(value) {
             switch(value) {
@@ -78,6 +79,21 @@
                 </div>
             </div>
             <div class="plant_chat">
+                <div id="chat_interface" style="display: none">
+                    <div>
+                        <div id="who_you_are" style="display: inline"></div>, you are in room: <div id="in_room" style="display: inline"></div>
+                    </div>
+                    <div id="history" class="boxed"></div>
+                    <div id="input" class="bottom boxed">
+                        <form onsubmit="return false;" style="width: 100%">
+                            <p>
+                                <label for="name"> chat: </label>
+                                <input type="text" id="chat_input" name="chat_input" style="width: 80%">
+                                <button id="chat_send" onclick="sendChatText()">Send</button>
+                            </p>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </body>
