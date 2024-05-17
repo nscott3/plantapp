@@ -187,4 +187,17 @@ router.get('/settings', function(req, res, next) {
     res.render('settings', { title: 'Settings' });
 });
 
+router.post('/plant/:id/add-chat/', function(req, res, next) {
+    const objectId = new ObjectId(req.params.id);
+    const chat = req.body.chat;
+
+    plantController.addChat(objectId, chat).then(plant => {
+        console.log(plant);
+        res.status(200).send(plant);
+    }).catch(err => {
+        console.log(err);
+        res.status(500).send(err);
+    });
+});
+
 module.exports = router;

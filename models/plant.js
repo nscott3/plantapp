@@ -37,12 +37,8 @@ let plantSchema = new mongoose.Schema({
             dbpediaURI: String,
             timestamp: { type: Date, default: Date.now }
         }
-    ]
-    // chat: [{
-    //     userNickname: String,
-    //     message: String,
-    //     timestamp: { type: Date, default: Date.now }
-    // }]
+    ],
+    chats: [ String ]
 });
 
 // Configure the 'toObject' option for the schema to include getters

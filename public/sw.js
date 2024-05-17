@@ -22,6 +22,7 @@ self.addEventListener('install', event => {
                 '/javascripts/search.js',
                 '/javascripts/plant.js',
                 '/javascripts/nickname.js',
+                '/javascripts/chat.js',
                 '/stylesheets/style.css',
                 '/images/image_icon.png',
             ]);

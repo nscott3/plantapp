@@ -1,9 +1,9 @@
 // Function to get the plant list from the IndexedDB
-const getAllSyncPlants = (syncPlantIDB) => {
+const getAllSyncItems = (IDB, db_name) => {
     return new Promise((resolve, reject) => {
-        const transaction = syncPlantIDB.transaction(["sync-plants"]);
-        const plantStore = transaction.objectStore("sync-plants");
-        const getAllRequest = plantStore.getAll();
+        const transaction = IDB.transaction([db_name]);
+        const itemStore = transaction.objectStore(db_name);
+        const getAllRequest = itemStore.getAll();
 
         getAllRequest.addEventListener("success", () => {
             resolve(getAllRequest.result);
@@ -16,18 +16,18 @@ const getAllSyncPlants = (syncPlantIDB) => {
 }
 
 // Function to delete a syn
-const deleteSyncPlantFromIDB = (syncPlantIDB, id) => {
-    const transaction = syncPlantIDB.transaction(["sync-plants"], "readwrite")
-    const plantStore = transaction.objectStore("sync-plants")
-    const deleteRequest = plantStore.delete(id)
+const deleteSyncItemFromIDB = (IDB, db_name, id) => {
+    const transaction = IDB.transaction([db_name], "readwrite")
+    const itemStore = transaction.objectStore(db_name)
+    const deleteRequest = itemStore.delete(id)
     deleteRequest.addEventListener("success", () => {
         console.log("Deleted " + id)
     })
 }
 
-function openSyncPlantsIDB() {
+function openIDB(db_name) {
     return new Promise((resolve, reject) => {
-        const request = indexedDB.open("sync-plants", 1);
+        const request = indexedDB.open(db_name, 1);
 
         request.onerror = function (event) {
             reject(new Error(`Database error: ${event.target}`));
@@ -35,7 +35,7 @@ function openSyncPlantsIDB() {
 
         request.onupgradeneeded = function (event) {
             const db = event.target.result;
-            db.createObjectStore('sync-plants', {keyPath: 'id', autoIncrement: true});
+            db.createObjectStore(db_name, {keyPath: 'id', autoIncrement: true});
         };
 
         request.onsuccess = function (event) {

@@ -5,7 +5,11 @@
         <link rel="manifest" href="/manifest.json">
         <link rel="icon" href="/images/plant-icon.png" type="image/x-icon">
         <link rel='stylesheet' href='/stylesheets/style.css' />
+        <script src="/javascripts/index.js"></script>
         <script src="/javascripts/plant.js"></script>
+        <script src="/javascripts/idb-utility.js"></script>
+        <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+        <script src="/javascripts/chat.js"></script>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
               integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
               crossorigin=""/>
@@ -89,7 +93,7 @@
                     </script>
                 </div>
             </div>
-            <div class="plant_chat">
+            <div class="suggestions_chat_container">
                 <div class="suggestions_card">
                     <h2>Suggestions</h2>
                     <div class="suggestions">
@@ -97,12 +101,33 @@
                         <% data.suggestions.forEach(suggestion => { %>
                             <div class="suggestion">
                                 <p>- <strong><%= suggestion.userNickname %></strong> suggested <a href="<%= suggestion.dbpediaURI %>"><%= suggestion.name %></a> on <%= formatDate(suggestion.timestamp) %> </p>
-
                                 <button class="accept_suggestion" data-suggestion-id="<%= suggestion._id %>" data-status="<%= data.identification.status %>" data-nickname="<%= data.userNickname %>">
                                     Accept
                                 </button>
                             </div>
                         <% }) %>
+                    </div>
+                </div>
+                <div id="chat_interface">
+                    <h2>Chat</h2>
+                    <div>
+                        <div id="who_you_are" style="display: inline"></div>
+                        <div id="in_room" style="display: inline"></div>
+                    </div>
+                    <div id="history" class="boxed">
+                        <% data.chats.forEach(chat => { %>
+                            <p><%= chat %></p>
+                        <% }) %>
+                    </div>
+                    <div id="input" class="bottom boxed">
+                        <form onsubmit="return false;" style="width: 100%">
+                            <div class="chat_container">
+                                <label for="name">Chat: </label>
+                                <input type="text" id="chat_input" name="chat_input" style="width: 80%">
+                                <input type="hidden" id="roomNo" name="roomNo" value="<%= data._id %>">
+                                <button id="chat_send">Send</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

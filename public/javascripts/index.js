@@ -43,14 +43,15 @@ window.addEventListener('load', function() {
     }
     if (navigator.onLine) {
         fetchAndUpdatePlants();
+        fetchAndUpdateChats();
     } else {
         console.log("Offline mode");
     }
 });
 
 async function fetchAndUpdatePlants() {
-    const db = await openSyncPlantsIDB();
-    const plants = await getAllSyncPlants(db);
+    const db = await openIDB("sync-plants");
+    const plants = await getAllSyncItems(db, "sync-plants");
     let refresh = false;
 
     if (plants.length > 0) {
@@ -78,10 +79,43 @@ async function syncPlants(db, plants) {
         try {
             const data = await postData('http://localhost:3000/add-plant', formData);
             console.log(data);
-            await deleteSyncPlantFromIDB(db, plant.id);
+            await deleteSyncItemFromIDB(db, "sync-plants", plant.id);
         } catch (error) {
             console.error('Error:', error);
         }
     }
 }
 
+async function fetchAndUpdateChats() {
+    const db = await openIDB("sync-chats");
+    const chats = await getAllSyncItems(db, "sync-chats");
+    let refresh = false;
+
+    if (chats.length > 0) {
+        await syncChats(db, chats);
+        console.log("Synced chats");
+        refresh = true;
+    }
+
+    if (refresh) {
+        location.reload();
+    }
+}
+
+async function syncChats(db, chats) {
+    for (const chat of chats) {
+        try {
+            const data = await fetch(`/plant/${chat.plantId}/add-chat/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(chat),
+            })
+            console.log(data);
+            await deleteSyncItemFromIDB(db, "sync-chats", chat.id);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+}

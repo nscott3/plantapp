@@ -32,7 +32,8 @@ exports.create = function (userData, file) {
         },
         userNickname: userData.userNickname,
         photo: file.path,
-        suggestions: []
+        suggestions: [],
+        chats: []
     });
     return plant.save().then(plant => {
         console.log(plant);
@@ -82,6 +83,30 @@ exports.addSuggestion = function (id, suggestion) {
     // Retrieve one plant from the database
     return plantModel.findById(id).then(plant => {
         plant.suggestions.push(suggestion);
+        return plant.save().then(plant => {
+            // Return the plant as a JSON string
+            return JSON.stringify(plant);
+        }).catch(err => {
+            // Log the error if saving fails
+            console.log(err);
+
+            // Return null in case of an error
+            return null;
+        });
+    }).catch(err => {
+        // Log the error if retrieval fails
+        console.log(err);
+
+        // Return null in case of an error
+        return null;
+    });
+}
+
+// Function to add suggestion for plant
+exports.addChat = function (id, chat) {
+    // Retrieve one plant from the database
+    return plantModel.findById(id).then(plant => {
+        plant.chats.push(chat);
         return plant.save().then(plant => {
             // Return the plant as a JSON string
             return JSON.stringify(plant);
