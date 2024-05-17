@@ -1,38 +1,24 @@
-const { Message } = require('../app');
 
 exports.init = function(io) {
-  io.on('connection', (socket) => {
-    console.log("User connected");
+  io.sockets.on('connection', function (socket) {
+    console.log("try");
+    try {
+      /**
+       * create or joins a room
+       */
+      socket.on('create or join', function (room, userId) {
+        socket.join(room);
+        io.sockets.to(room).emit('joined', room, userId);
+      });
 
-    socket.on('disconnect', () => {
-      console.log('User disconnected');
-    });
+      socket.on('chat', function (room, userId, chatText) {
+        io.sockets.to(room).emit('chat', room, userId, chatText);
+      });
 
-    /**
-     * Create or join a room
-     */
-    socket.on('create or join', async (room, userId) => {
-      socket.join(room);
-
-      // Load messages from MongoDB
-      try {
-        const messages = await Message.find({ roomName: room }).sort('timestamp');
-        socket.emit('load messages', messages);
-        io.to(room).emit('joined', room, userId);
-      } catch (error) {
-        console.error('Error loading messages:', error);
-      }
-    });
-
-    socket.on('chat', async (room, userId, chatText) => {
-      const chatMessage = new Message({ roomName: room, userName: userId, text: chatText });
-
-      try {
-        await chatMessage.save();
-        io.to(room).emit('chat', room, userId, chatText);
-      } catch (error) {
-        console.error('Error saving message:', error);
-      }
-    });
+      socket.on('disconnect', function(){
+        console.log('someone disconnected');
+      });
+    } catch (e) {
+    }
   });
-};
+}
