@@ -24,6 +24,7 @@ window.addEventListener('load', function() {
 
         const chat = {
             chat: chatText,
+            plantId: plantId,
         }
 
         // Make the POST request
@@ -37,9 +38,24 @@ window.addEventListener('load', function() {
             .then(response => response.json())
             .then(data => {
                 console.log('Success:', data);
-            })
-            .catch((error) => {
+            }).catch(error => {
                 console.error('Error:', error);
+                alert("Error contacting server! Will sync data when back online!", error);
+                writeOnHistory(chatText);
+
+                openIDB('sync-chats').then((db) => {
+                    const transaction = db.transaction(['sync-chats'], 'readwrite');
+                    const objectStore = transaction.objectStore('sync-chats');
+                    const request = objectStore.add(chat);
+
+                    request.onsuccess = function (event) {
+                        console.log("Chat added successfully!");
+                    };
+
+                    request.onerror = function (event) {
+                        console.error("Error adding chat: ", event.target.error);
+                    };
+                });
             });
     });
 });
@@ -58,7 +74,9 @@ function init() {
  */
 function sendChatText(chatText) {
     console.log(roomNo, nickname, chatText);
-    socket.emit('chat', roomNo, nickname, chatText);
+    if (navigator.onLine) {
+        socket.emit('chat', roomNo, nickname, chatText);
+    }
 }
 
 /**

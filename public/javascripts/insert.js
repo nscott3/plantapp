@@ -1,31 +1,3 @@
-// const addNewPlantButtonEventListener = () => {
-//     const txt_val = document.getElementById("txt_in").value
-//
-//     openSyncPlantsIDB().then((db) => {
-//         const transaction = db.transaction(['sync-plants'], 'readwrite');
-//         const objectStore = transaction.objectStore('sync-plants');
-//         const request = objectStore.add({text: txt_val});
-//
-//         request.onsuccess = function (event) {
-//             console.log("Plant added successfully!");
-//         };
-//
-//         request.onerror = function (event) {
-//             console.error("Error adding plant: ", event.target.error);
-//         };
-//     });
-//
-//
-//     navigator.serviceWorker.ready
-//         .then(function (serviceWorkerRegistration) {
-//             serviceWorkerRegistration.showNotification("Plant App",
-//                 {body: "Plant added! - " + txt_val})
-//                 .then(r =>
-//                     console.log(r)
-//                 );
-//         });
-// }
-
 function getBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -87,12 +59,12 @@ window.onload = function () {
             alert("Plant added successfully!");
         }).catch(error => {
             console.error('Error:', error);
-            alert("Error adding plant! Must be offline!", error);
+            alert("Error contacting server! Will sync data when back online!", error);
 
             getBase64(jsonData.photo).then(base64 => {
                 jsonData.photo = base64;
             });
-            openSyncPlantsIDB().then((db) => {
+            openIDB("sync-plants").then((db) => {
                 const transaction = db.transaction(['sync-plants'], 'readwrite');
                 const objectStore = transaction.objectStore('sync-plants');
                 const request = objectStore.add(jsonData);
