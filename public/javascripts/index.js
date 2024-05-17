@@ -5,6 +5,10 @@ let socket = io();
 
 // Register service worker to control making site work offline
 window.addEventListener('load', function() {
+    document.addEventListener('DOMContentLoaded', function() {
+        init();
+    });
+
     // Check if nickname is set in local storage
     let nickname = localStorage.getItem('nickname');
     if (!nickname) {
@@ -146,4 +150,3 @@ function hideLoginInterface(room, userId) {
     document.getElementById('who_you_are').innerHTML= userId;
     document.getElementById('in_room').innerHTML= ' '+room;
 }
-
