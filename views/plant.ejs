@@ -112,14 +112,18 @@
                         <div id="who_you_are" style="display: inline"></div>
                         <div id="in_room" style="display: inline"></div>
                     </div>
-                    <div id="history" class="boxed"></div>
+                    <div id="history" class="boxed">
+                        <% data.chats.forEach(chat => { %>
+                            <p><%= chat %></p>
+                        <% }) %>
+                    </div>
                     <div id="input" class="bottom boxed">
                         <form onsubmit="return false;" style="width: 100%">
                             <div class="chat_container">
                                 <label for="name">Chat: </label>
                                 <input type="text" id="chat_input" name="chat_input" style="width: 80%">
                                 <input type="hidden" id="roomNo" name="roomNo" value="<%= data._id %>">
-                                <button id="chat_send" onclick="sendChatText()">Send</button>
+                                <button id="chat_send">Send</button>
                             </div>
                         </form>
                     </div>

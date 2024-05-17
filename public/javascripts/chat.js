@@ -12,35 +12,51 @@ window.addEventListener('load', function() {
 
     init();
     connectToRoom();
+
+    const pathArray = window.location.pathname.split('/');
+    const plantId = pathArray[pathArray.length - 1];
+
+    const chatSendButton = document.getElementById('chat_send');
+    chatSendButton.addEventListener('click', function () {
+        const chatText = nickname + ": "+ document.getElementById('chat_input').value;
+
+        sendChatText(chatText);
+
+        const chat = {
+            chat: chatText,
+        }
+
+        // Make the POST request
+        fetch(`/plant/${plantId}/add-chat/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(chat),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    });
 });
 
 function init() {
-    // called when someone joins the room. If it is someone else it notifies the joining of the room
-    socket.on('joined', function (room, userId) {
-        if (userId === nickname) {
-            // it enters the chat
-            hideLoginInterface(room, userId);
-        } else {
-            // notifies that someone has joined the room
-            writeOnHistory('<b>'+userId+'</b>' + ' joined room ' + room);
-        }
-    });
     // called when a message is received
     socket.on('chat', function (room, userId, chatText) {
-        let who = userId
-        if (userId === nickname) who = 'Me';
         console.log("Chat!", room, userId, chatText);
-        writeOnHistory('<b>' + who + ':</b> ' + chatText);
+        writeOnHistory(chatText);
     });
-
 }
 
 /**
  * called when the Send button is pressed. It gets the text to send from the interface
  * and sends the message via  socket
  */
-function sendChatText() {
-    let chatText = document.getElementById('chat_input').value;
+function sendChatText(chatText) {
     console.log(roomNo, nickname, chatText);
     socket.emit('chat', roomNo, nickname, chatText);
 }
@@ -51,7 +67,6 @@ function sendChatText() {
  */
 function connectToRoom() {
     roomNo = document.getElementById('roomNo').value;
-    console.log("RoomNo", roomNo);
     if (!nickname) nickname = 'Unknown-' + Math.random();
     socket.emit('create or join', roomNo, nickname);
 }
@@ -67,16 +82,4 @@ function writeOnHistory(text) {
     paragraph.innerHTML = text;
     history.appendChild(paragraph);
     document.getElementById('chat_input').value = '';
-}
-
-/**
- * it hides the initial form and shows the chat
- * @param room the selected room
- * @param userId the user name
- */
-function hideLoginInterface(room, userId) {
-    document.getElementById('initial_form').style.display = 'none';
-    document.getElementById('chat_interface').style.display = 'block';
-    document.getElementById('who_you_are').innerHTML= userId;
-    document.getElementById('in_room').innerHTML= ' '+room;
 }
