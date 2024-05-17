@@ -91,7 +91,7 @@
                     </script>
                 </div>
             </div>
-            <div class="plant_chat">
+            <div class="suggestions_chat_container">
                 <div class="suggestions_card">
                     <h2>Suggestions</h2>
                     <div class="suggestions">
@@ -106,7 +106,8 @@
                         <% }) %>
                     </div>
                 </div>
-                <div id="chat_interface" style="display: inline; margin-top: 20px;">
+                <div id="chat_interface">
+                    <h2>Chat</h2>
                     <div>
                         <div id="who_you_are" style="display: inline"></div>
                         <div id="in_room" style="display: inline"></div>
@@ -114,12 +115,12 @@
                     <div id="history" class="boxed"></div>
                     <div id="input" class="bottom boxed">
                         <form onsubmit="return false;" style="width: 100%">
-                            <p>
-                                <label for="name"> chat: </label>
+                            <div class="chat_container">
+                                <label for="name">Chat: </label>
                                 <input type="text" id="chat_input" name="chat_input" style="width: 80%">
                                 <input type="hidden" id="roomNo" name="roomNo" value="<%= data._id %>">
                                 <button id="chat_send" onclick="sendChatText()">Send</button>
-                            </p>
+                            </div>
                         </form>
                     </div>
                 </div>

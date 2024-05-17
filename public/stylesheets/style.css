@@ -100,6 +100,12 @@ form#add_form .checkbox-item {
     overflow-y: auto;
 }
 
+.suggestions_chat_container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 /* Plant Card */
 .plant_card {
   border: 1px solid #ccc;
@@ -256,4 +262,25 @@ form#add_form .checkbox-item {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Chat */
+#chat_interface {
+  display: flex;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  background: #f9f9f9;
+  flex-direction: column;
+}
+
+#chat_interface h2 {
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
+
+.chat_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
