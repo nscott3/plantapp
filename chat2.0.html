@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #login, #chat-room {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #login {
+            display: block;
+        }
+        #chat-room {
+            display: none;
+        }
+        #messages {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+        }
+        .message {
+            margin-bottom: 10px;
+        }
+        .message .name {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div id="login">
+    <h2>Login to Chat Room</h2>
+    <form id="login-form" onsubmit="enterName(event)">
+        <input type="text" id="username" placeholder="Enter your name" required>
+        <br>
+        <input type="text" id="room-name" placeholder="Enter room name" required>
+        <br>
+        <button type="submit">Enter</button>
+    </form>
+</div>
+
+<div id="chat-room">
+    <h2 id="room-title"></h2>
+    <div id="messages"></div>
+    <form id="message-form" onsubmit="sendMessage(event)">
+        <input type="text" id="message-input" placeholder="Type a message" required>
+        <button type="submit">Send</button>
+    </form>
+</div>
+
+<script>
+    let username = '';
+    let roomName = '';
+
+    function enterName(event) {
+        event.preventDefault();
+        username = document.getElementById('username').value;
+        roomName = document.getElementById('room-name').value;
+        
+        if (username && roomName) {
+            document.getElementById('room-title').innerText = `Room: ${roomName}`;
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('chat-room').style.display = 'block';
+        }
+    }
+
+    function sendMessage(event) {
+        event.preventDefault();
+        const messageInput = document.getElementById('message-input');
+        const messageText = messageInput.value;
+
+        if (messageText) {
+            displayMessage(username, messageText);
+            messageInput.value = '';
+        }
+    }
+
+    function displayMessage(name, text) {
+        const messagesDiv = document.getElementById('messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+        messageDiv.innerHTML = `<span class="name">${name}:</span> ${text}`;
+        messagesDiv.appendChild(messageDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+</script>
+
+</body>
+</html>
