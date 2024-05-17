@@ -4,6 +4,8 @@ var plantController = require('../controllers/plant')
 var multer  = require('multer')
 const { ObjectId } = require('mongodb');
 
+const sheffieldCoords = [53.38052720222441, -1.4722718308805407];
+
 // storage defines the storage options to be used for file upload with multer
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -22,43 +24,83 @@ let upload = multer({ storage: storage });
 /* GET home page. */
 // index.js
 router.get('/', function(req, res, next) {
-    plantController.getAll().then(plants => {
-        // Capture the search options from the query parameters
-        const searchInput = req.query.searchInput;
-        const identificationCompleted = req.query.identificationCompleted === 'true';
-        const identificationNotCompleted = req.query.identificationNotCompleted === 'true';
-        const hasFlowers = req.query.hasFlowers === 'true';
-        const noFlowers = req.query.noFlowers === 'true';
-        const hasLeaves = req.query.hasLeaves === 'true';
-        const noLeaves = req.query.noLeaves === 'true';
-        const hasFruitsOrSeeds = req.query.hasFruitsOrSeeds === 'true';
-        const noFruitsOrSeeds = req.query.noFruitsOrSeeds === 'true';
-        const sortOption = req.query.sortOption;
+    // Capture the search options from the query parameters
+    const searchInput = req.query.searchInput;
+    const identificationCompleted = req.query.identificationCompleted === 'true';
+    const identificationNotCompleted = req.query.identificationNotCompleted === 'true';
+    const hasFlowers = req.query.hasFlowers === 'true';
+    const noFlowers = req.query.noFlowers === 'true';
+    const hasLeaves = req.query.hasLeaves === 'true';
+    const noLeaves = req.query.noLeaves === 'true';
+    const hasFruitsOrSeeds = req.query.hasFruitsOrSeeds === 'true';
+    const noFruitsOrSeeds = req.query.noFruitsOrSeeds === 'true';
+    const sortOption = req.query.sortOption;
+
+    // Create filter object
+    let filter = {};
+    if (searchInput) {
+        filter['identification.name'] = { $regex: new RegExp(searchInput, 'i') };
+    }
+    if (identificationCompleted) {
+        filter['identification.status'] = 'completed';
+    }
+    if (identificationNotCompleted) {
+        filter['identification.status'] = { $ne: 'completed' };
+    }
+    if (hasFlowers) {
+        filter['plantCharacteristics.hasFlowers'] = true;
+    }
+    if (noFlowers) {
+        filter['plantCharacteristics.hasFlowers'] = false;
+    }
+    if (hasLeaves) {
+        filter['plantCharacteristics.hasLeaves'] = true;
+    }
+    if (noLeaves) {
+        filter['plantCharacteristics.hasLeaves'] = false;
+    }
+    if (hasFruitsOrSeeds) {
+        filter['plantCharacteristics.hasFruitsOrSeeds'] = true;
+    }
+    if (noFruitsOrSeeds) {
+        filter['plantCharacteristics.hasFruitsOrSeeds'] = false;
+    }
+
+    // Create sort object
+    let sort = {};
+    let geoNear = null;
+
+    if (sortOption === 'sortDateOld') {
+        sort['dateTimeSeen'] = 1;
+    } else if (sortOption === 'sortDateNew') {
+        sort['dateTimeSeen'] = -1;
+    } else if (sortOption === 'sortNameAsc') {
+        sort['identification.name'] = 1;
+    } else if (sortOption === 'sortNameDesc') {
+        sort['identification.name'] = -1;
+    }
+    if (sortOption === 'distanceAsc' || sortOption === 'distanceDesc') {
+        geoNear = {
+            near: { type: 'Point', coordinates: sheffieldCoords },
+            distanceField: 'distance',
+                spherical: true,
+            key: 'location.coordinates'
+        };
+    }
+    if (sortOption === 'distanceAsc') {
+        sort['distance'] = 1;
+    } else if (sortOption === 'distanceDesc') {
+        sort['distance'] = -1;
+    }
+
+    plantController.getAll(filter, sort, geoNear).then(plants => {
         plants = JSON.parse(plants);
-        // Filter the plants based on the search options
-        let filteredPlants = plants.filter(plant => {
-            return searchInput === undefined || (plant.identification.name && plant.identification.name.toLowerCase().includes(searchInput.toLowerCase()));
-        });
-
-        // Sort the filtered plants based on the sort option
-        if (sortOption === 'date') {
-            filteredPlants.sort((a, b) => new Date(a.dateTimeSeen) - new Date(b.dateTimeSeen));
-        } else if (sortOption === 'name') {
-            filteredPlants.sort((a, b) => a.name.localeCompare(b.name));
-        } else if (sortOption === 'distance') {
-            filteredPlants.sort((a, b) => a.location.coordinates - b.location.coordinates);
-        }
-
         res.set('Cache-Control', 'no-cache');
-        res.render('index', { title: 'View All Plants', data: filteredPlants});
+        res.render('index', { title: 'View All Plants', data: plants});
+    }).catch(err => {
+        console.log(err);
+        res.status(500).send(err);
     });
-
-    // result.then(plants => {
-    //     console.log(plants);
-    //     let data = plants
-    //     console.log(data.length)
-    //     r
-    // })
 });
 
 router.get('/insert', function(req, res, next) {
@@ -70,7 +112,7 @@ router.get('/insert', function(req, res, next) {
     let minutes = ("0" + date.getMinutes()).slice(-2);
     let formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
 
-    res.render('insert', { title: 'Insert a Plant', dateTimeSeen: formattedDate });
+    res.render('insert', { title: 'Insert a Plant', dateTimeSeen: formattedDate, sheffieldCoords: sheffieldCoords });
 });
 
 // route to get all plants
