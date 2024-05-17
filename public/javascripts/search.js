@@ -31,11 +31,8 @@ window.onload = function () {
             sortOption
         });
 
-        // Make the GET request
-        fetch(`${url}?${params}`)
-            .then(function (res) {
-                console.log("Fetched plants");
-                return res.json();
-            });
+        // Go to the search page with the query parameters
+        window.location.href = url + '?' + params.toString();
+
     });
 }

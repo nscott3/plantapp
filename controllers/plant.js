@@ -49,9 +49,30 @@ exports.create = function (userData, file) {
 };
 
 // Function to get all plants
-exports.getAll = function () {
+exports.getAll = function (filter = {}, sort = {}, geoNear = null) {
+    let query;
+
+    if (geoNear !== null) {
+        // Use aggregation for geoNear
+        query = plantModel.aggregate([
+            {
+                $geoNear: {
+                    near: geoNear.near,
+                    distanceField: geoNear.distanceField,
+                    spherical: geoNear.spherical,
+                    key: geoNear.key,
+                    query: filter
+                }
+            },
+            { $sort: sort }
+        ]);
+    } else {
+        // Use find for filter and sort
+        query = plantModel.find(filter).sort(sort);
+    }
+
     // Retrieve all plants from the database
-    return plantModel.find({}).then(plants => {
+    return query.then(plants => {
         // Return the list of plants as a JSON string
         return JSON.stringify(plants);
     }).catch(err => {
